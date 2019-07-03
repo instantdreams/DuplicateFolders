@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+	<JobFolder>[path to where you place your powershell scripts\DuplicateFolders]</JobFolder>
+	<JobName>DuplicateFolders</JobName>
+	<LogFolder>[path to where you place your powershell scripts\Logs]</LogFolder>
+	<FileHandler>C:\Windows\system32\Robocopy.exe</FileHandler>
+	<FilesToInclude>*.*</FilesToInclude>
+	<FilesToCopy>/COPYALL</FilesToCopy>
+	<CopyOptions>/R:3 /W:1 /E /V /NP /FP /TEE /ZB /MIR /MT /FFT</CopyOptions>
+</Configuration>
