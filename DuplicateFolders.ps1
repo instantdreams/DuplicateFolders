@@ -3,12 +3,13 @@ Param
 (
     [Parameter(Mandatory=$True)] [string] $Source,
     [Parameter(Mandatory=$True)] [string] $Destination,
+    [Parameter(Mandatory=$False)] [Switch] $Notify,
     [Parameter(Mandatory=$False)] [string] $JobName
 )
 
 
-# Function Duplicate-Folders - copy the source folder to the destination folder
-function Duplicate-Folders
+# Function Copy-Folders - copy the source folder to the destination folder
+function Copy-Folders
 {
     <#
     .SYNOPSIS
@@ -16,7 +17,7 @@ function Duplicate-Folders
     .DESCRIPTION
         Use Robocopy to duplicate a folder
     .EXAMPLE
-        Duplicate-Folders
+        Copy-Folders
     .OUTPUTS
         None
     .NOTES
@@ -28,12 +29,16 @@ function Duplicate-Folders
         Author:         Dean Smith | deanwsmith@outlook.com
         Update Date:    2019-07-03
         Purpose/Change: Merged scripts to use functions
+        Version:        1.2
+        Author:         Dean Smith | deanwsmith@outlook.com
+        Update Date:    2024-09-17
+        Purpose/Change: Updated to use global variable for notification
     #>
     ## ---- [Function Parameters] ----
     [CmdletBinding()]
     Param()
 
-    ## ---- [Function Beginning] ----
+    ## ---- [Function Beginning] ---    -
     Begin {}
 
     ## ---- [Function Execution] ----
@@ -75,6 +80,44 @@ function Duplicate-Folders
         If ($ExitMessage.ContainsKey($Robocopy.ExitCode)) { $LogMessage = $LogMessage + "`n" + $ExitMessage.($Robocopy.ExitCode) }
         Else { $LogMessage = $LogMessage +  "`n[Unknown] Can't interpret this exit code." }
         Add-Content $LogFile $LogMessage -PassThru
+        If ($Notify) { $global:TelegramMessage = ("Job: " + $JobName + "`nMessage: " + $ExitMessage.($Robocopy.ExitCode)) }
+    }
+
+    ## ---- [Function End] ----
+    End {}
+}
+
+
+# Function Send-Telegram - send a message to a telegram chat or channel
+Function Send-Telegram
+{
+    <#
+    .SYNOPSIS
+        Send a notification to Telegram
+    .DESCRIPTION
+        Using a Token and ChatId, send a notification
+    .EXAMPLE
+        Send-Telegram
+    .OUTPUTS
+        None
+    .NOTES
+        Version:        1.0
+        Author:         Dean Smith | deanwsmith@outlook.com
+        Creation Date:  2024-09017
+        Purpose/Change: Initial script creation
+    #>
+    ## ---- [Function Parameters] ----
+    [CmdletBinding()]
+    Param()
+
+    ## ---- [Function Beginning] ----
+    Begin {}
+
+    ## ---- [Function Execution] ----
+    Process
+    {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $Response = Invoke-RestMethod -Uri "https://api.telegram.org/bot$($TelegramToken)/sendMessage?chat_id=$($TelegramChatId)&text=$($global:TelegramMessage)"
     }
 
     ## ---- [Function End] ----
@@ -128,6 +171,8 @@ If (Test-Path $ConfigurationFile)
         $FilesToInclude = $Job.Configuration.FilesToInclude
         $FilesToCopy = $Job.Configuration.FilesToCopy
         $CopyOptions = $Job.Configuration.CopyOptions
+        $TelegramToken = $Job.Configuration.TelegramToken
+        $TelegramChatId = $Job.Configuration.TelegramChatId
 	}
 	Catch [system.exception]
     {
@@ -141,8 +186,10 @@ $Timestamp = Get-Date -UFormat "%T"
 $LogMessage = ("-" * 79 + "`r`n$Timestamp`t${JobName}: Starting Transcript`r`n" + "-" * 79)
 Add-Content $LogFile $LogMessage -PassThru
 
-# Call functions to duplicate folders
-Duplicate-Folders
+# Call functions to copy folders
+If ($Notify) { $global:TelegramMessage = $null }
+Copy-Folders
+If ($Notify) { Send-Telegram }
 
 ## Stop Transcript
 $Timestamp = Get-Date -UFormat "%T"

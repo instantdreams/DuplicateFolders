@@ -1,8 +1,8 @@
 # Exclude configuration file - get DuplicateFolders-Sample.xml from repository, rename to DuplicateFolders.xml, then adjust accordingly
 DuplicateFolders.xml
 
-# Created by https://www.gitignore.io/api/powershell
-# Edit at https://www.gitignore.io/?templates=powershell
+# Created by https://www.toptal.com/developers/gitignore/api/powershell
+# Edit at https://www.toptal.com/developers/gitignore?templates=powershell
 
 ### PowerShell ###
 # Exclude packaged modules
@@ -11,4 +11,4 @@ DuplicateFolders.xml
 # Exclude .NET assemblies from source
 *.dll
 
-# End of https://www.gitignore.io/api/powershell
+# End of https://www.toptal.com/developers/gitignore/api/powershell

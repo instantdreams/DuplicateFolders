@@ -7,4 +7,6 @@
 	<FilesToInclude>*.*</FilesToInclude>
 	<FilesToCopy>/COPYALL</FilesToCopy>
 	<CopyOptions>/R:3 /W:1 /E /V /NP /FP /TEE /ZB /MIR /MT /FFT</CopyOptions>
+	<TelegramToken>[telegram-token]</TelegramToken>
+	<TelegramChatId>[telegram-chat-id]</TelegramChatId>
 </Configuration>

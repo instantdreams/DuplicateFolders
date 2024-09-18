@@ -7,13 +7,14 @@ This script wraps Robocopy, the Robust File Copy program that is included with t
 
 ## Features
 
-The Duplicate Folders PowerShell script uses a configuration file to allow easy management of your personal settings plus the Robocopy preferences of your choice.
+The DuplicateFolders PowerShell script uses a configuration file to allow easy management of your personal settings plus the Robocopy preferences of your choice.
 
-The Duplicate Folders PowerShell script will:
+The DuplicateFolders PowerShell script will:
 
 * Copy the content of one folder to another
 * By default, mirror the structure and attributes of the files
 * Write results to a log file for analysis
+* Optionally notify a telegram channel with the result from the copy
 
 
 ## Prerequisites
@@ -21,8 +22,8 @@ The Duplicate Folders PowerShell script will:
 To install the script on your system you will need the following information:
 
 * A script location for your PowerShell scripts (e.g. "C:\Tools\Scripts" or "D:\ServerFolders\Company\Scripts")
-* A folder for log files  (e.g. "C:\Tools\Scripts\Logs" or "D:\ServerFolders\Company\Scripts\Logs")
-* A working install of [robocopy](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/robocopy)
+* A folder for log files (e.g. "C:\Tools\Scripts\Logs" or "D:\ServerFolders\Company\Scripts\Logs")
+* A working install of [robocopy](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/robocopy)
 
 
 ## Installation
@@ -30,7 +31,7 @@ To install the script on your system you will need the following information:
 A simple clone of the repository is all that is required:
 
 * On the [GitHub page for this repository](https://github.com/instantdreams/DuplicateFolders) select "Clone or Download" and copy the web URL
-* Open your GIT Bash of choice and enter the following commands:
+* Open your git BBash of choice and enter the following commands:
 	* cd {base location of your scripts folder} (e.g. /d/ServerFolders/Company/Scripts)
 	* git clone {repository url} (e.g. https://github.com/instantdreams/DuplicateFolders.git)
 
@@ -71,8 +72,15 @@ The following should be considered
     * /NFL : No File List - don't log file names.
     * /NDL : No Directory List - don't log directory names.
     * /L   : List only - don't copy, timestamp or delete any files.
-
 The default settings use /ZB which will attempt to restart from point of failure. This can decrease performance and throughput, but are useful for overnight backups.
+
+If calling using the -Notify option, include the following:
+
+* TelegramToken
+  * Your Telegram token from the BotFather
+* TelegramChatId
+  * Your Telegram Chat Id
+
 
 
 ## Running
